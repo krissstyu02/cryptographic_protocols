@@ -12,6 +12,8 @@ def euler_phi_definition(n):
         #нод==1(взаимно простое)
         if math.gcd(n, i) == 1:
             count += 1
+    # print("Функция Эйлера")
+    # print(count)
     return count
 
 # Функция для нахождения функции Эйлера с использованием формулы
@@ -27,15 +29,19 @@ def euler_phi_standard_formula(n):
             #делим
             n //= i
         i += 1
+    if n > 1:
+        prime_factors.add(n)
 
     # Вычисляем значение функции Эйлера по стандартной формуле
     for p in prime_factors:
         result *= (1 - 1 / p)
-
+    # print("Функция Эйлера")
+    # print(round(result))
     return round(result)
 
 # Функция для нахождения функции Эйлера с использованием формулы оптимизированно
 def euler_phi_standard_formula_opt(n):
+    # print(n)
     result = n
     # Получаем список простых множителей числа n
     prime_factors = set()
@@ -47,16 +53,18 @@ def euler_phi_standard_formula_opt(n):
             #делим
             n //= i
         i += 1
-
+    if n > 1:
+        prime_factors.add(n)
     # Вычисляем значение функции Эйлера по стандартной формуле
     for p in prime_factors:
         result *= (1 - 1 / p)
-
+    # print("Функция Эйлера")
+    # print(round(result))
     return round(result)
 
 
 # Генерация списка из 100 случайных чисел, каждое из которых больше 10,000,000
-numbers = [random.randint(10000000, 100000000) for _ in range(100)]
+numbers = [random.randint(100, 300) for _ in range(10)]
 
 # Измерение времени выполнения для метода с использованием формулы
 start_time = time.time()
@@ -72,11 +80,17 @@ for num in numbers:
 end_time = time.time()
 print(f"Время выполнения (с использованием формулы): {end_time - start_time} секунд")
 
-# Измерение времени выполнения для метода по определению
+# Измерение времени выполнения для метода с использованием оптимизированной формулы
 start_time = time.time()
 for num in numbers:
-    euler_phi_definition(num)
+    euler_phi_standard_formula_opt(num)
 end_time = time.time()
-print(f"Время выполнения (по определению): {end_time - start_time} секунд")
+print(f"Время выполнения (с использованием оптимизированной формулы): {end_time - start_time} секунд")
+
+
+# for num in numbers:
+#     euler_phi_standard_formula_opt(num)
+#     euler_phi_standard_formula(num)
+#     euler_phi_definition(num)
 
 
