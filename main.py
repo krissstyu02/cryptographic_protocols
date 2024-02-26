@@ -66,26 +66,26 @@ def euler_phi_standard_formula_opt(n):
 # Генерация списка из 100 случайных чисел, каждое из которых больше 10,000,000
 numbers = [random.randint(100, 300) for _ in range(10)]
 
-# Измерение времени выполнения для метода с использованием формулы
-start_time = time.time()
-for num in numbers:
-    euler_phi_standard_formula_opt(num)
-end_time = time.time()
-print(f"Время выполнения (с использованием оптимизированной формулы): {end_time - start_time} секунд")
-
-# Измерение времени выполнения для метода с использованием формулы
-start_time = time.time()
-for num in numbers:
-    euler_phi_standard_formula(num)
-end_time = time.time()
-print(f"Время выполнения (с использованием формулы): {end_time - start_time} секунд")
-
-# Измерение времени выполнения для метода с использованием оптимизированной формулы
-start_time = time.time()
-for num in numbers:
-    euler_phi_standard_formula_opt(num)
-end_time = time.time()
-print(f"Время выполнения (с использованием оптимизированной формулы): {end_time - start_time} секунд")
+# # Измерение времени выполнения для метода с использованием формулы
+# start_time = time.time()
+# for num in numbers:
+#     euler_phi_standard_formula_opt(num)
+# end_time = time.time()
+# print(f"Время выполнения (с использованием оптимизированной формулы): {end_time - start_time} секунд")
+#
+# # Измерение времени выполнения для метода с использованием формулы
+# start_time = time.time()
+# for num in numbers:
+#     euler_phi_standard_formula(num)
+# end_time = time.time()
+# print(f"Время выполнения (с использованием формулы): {end_time - start_time} секунд")
+#
+# # Измерение времени выполнения для метода с использованием оптимизированной формулы
+# start_time = time.time()
+# for num in numbers:
+#     euler_phi_standard_formula_opt(num)
+# end_time = time.time()
+# print(f"Время выполнения (с использованием оптимизированной формулы): {end_time - start_time} секунд")
 
 
 # for num in numbers:
