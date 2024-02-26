@@ -11,9 +11,7 @@ class ModularExponentiation:
         # Метод для умножения по модулю
         return (a * b) % self.modulus
 
-    def _modular_add(self, a, b):
-        # Метод для сложения по модулю
-        return (a + b) % self.modulus
+
 
 
 #Пусть p — простое число, и a — целое число, не кратное p (т.е., a и p взаимно просты)
@@ -55,7 +53,7 @@ class ModularExponentiation:
 
 # Пример использования класса
 base = 7737737373
-exponent = -5
+exponent = 5
 modulus = 15
 
 mod_exp = ModularExponentiation(base, exponent, modulus)
