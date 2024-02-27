@@ -1,4 +1,5 @@
-from main import euler_phi_standard_formula_opt
+from lab1 import euler_phi_standard_formula_opt
+
 
 class ModularExponentiation:
     def __init__(self, base, exponent, modulus):
@@ -11,35 +12,44 @@ class ModularExponentiation:
         # Метод для умножения по модулю
         return (a * b) % self.modulus
 
+    def _are_coprime(self, a, b):
+        # Метод для проверки взаимной простоты(Алгоритм Евклида)
+        while b:
+            a, b = b, a % b
+        return a == 1
 
-
-
-#Пусть p — простое число, и a — целое число, не кратное p (т.е., a и p взаимно просты)
-# Тогда малая теорема Ферма утверждает, что: если p — простое число, то для любого целого числа a, не кратного p,
-#a^(p-1)   при делении на p дает остаток 1.
+    # Малая теорема Ферма утверждает, что: если p — простое число, то для любого целого числа a, не кратного p,
+    # a^(p-1) при делении на p дает остаток 1.
     def _modular_power_positive(self, base, exponent):
-        # Метод для вычисления положительной степени по малой теореме Ферма
         result = 1
-        #приводим основание к модулю
+        # приводим основание к модулю
         base = base % self.modulus
 
+        # Проверка взаимной простоты между основанием и модулем
+        if not self._are_coprime(base, self.modulus):
+            raise ValueError("Основание и модуль должны быть взаимно просты")
+
         while exponent > 0:
-            #степень числа нечетная
+            # степень числа нечетная
             if exponent % 2 == 1:
-                #умножаем наше число на себя(сделать степень четной)
+                # умножаем наше число на себя (сделать степень четной)
                 result = self._modular_multiply(result, base)
-            #уменьшаем степень вдвое
+            # уменьшаем степень вдвое
             exponent //= 2
-            #возводим основание в квадрат по модулю
+            # возводим основание в квадрат по модулю
             base = self._modular_multiply(base, base)
 
         return result
 
     def _modular_power_negative(self, base, exponent):
         # Метод для вычисления отрицательной степени по теореме Эйлера
-        #находим функцию Эйлера
-        phi_modulus = euler_phi_standard_formula_opt((self.modulus ))
-        #находим обратный эл-т по теореме Эйлера
+        # проверяем взаимную простоту между основанием и модулем
+        if not self._are_coprime(base, self.modulus):
+            raise ValueError("Основание и модуль должны быть взаимно просты")
+
+        # находим функцию Эйлера от модуля
+        phi_modulus = euler_phi_standard_formula_opt((self.modulus))
+        # находим обратный эл-т по теореме Эйлера
         inverse_base = pow(base, phi_modulus - 1, self.modulus)  # a^(phi(n)-1) % n
 
         return self._modular_power_positive(inverse_base, -exponent)
@@ -51,10 +61,11 @@ class ModularExponentiation:
         else:
             return self._modular_power_negative(self.base, self.exponent)
 
+
 # Пример использования класса
-base = 7737737373
+base = 3
 exponent = 5
-modulus = 15
+modulus = 11
 
 mod_exp = ModularExponentiation(base, exponent, modulus)
 result = mod_exp.calculate_power()
