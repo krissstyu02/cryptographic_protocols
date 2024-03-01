@@ -1,39 +1,120 @@
-def is_primitive_poly(poly):
-    degree = len(poly) - 1
-    max_order = 2**degree - 1
-    order = 1
-    current_poly = poly[:]
-    x_power = [0] * (max_order + 1)
-    x_power[1] = 1
+# Класс для представления полиномов в поле GF(2)
+class Polynom:
+    def __init__(self, body):
+        self.body = body
 
-    for i in range(2, max_order + 1):
-        x_power[i] = (x_power[i - 1] << 1) % (2**degree)
-        if x_power[i] >= 2**degree:
-            x_power[i] ^= poly
+    # Возвращает степень полинома
+    def degree(self):
+        return len(self.body) - 1
 
-    for i in range(1, max_order):
-        current_poly = multiply_polynomials(current_poly, poly)
-        if current_poly == [0]:
+    # Создает полином заданной степени с ведущим коэффициентом 1
+    @classmethod
+    def by_degree(cls, degree):
+        new_poly = [0] * (degree + 1)
+        new_poly[degree] = 1
+        return cls(new_poly)
+
+    # Создает полином по числу, представляя его в двоичной системе
+    @classmethod
+    def by_number(cls, number):
+        new_poly = []
+        while number:
+            new_poly.append(number % 2)
+            number //= 2
+        return cls(new_poly)
+
+    # Переопределение строки для красивого вывода полинома
+    def __str__(self):
+        terms = ['x^{}'.format(i) if c else '1' for i, c in enumerate(self.body[::-1]) if c]
+        return ' + '.join(terms)
+
+    # Переопределение оператора сложения для полиномов
+    def __add__(self, b):
+        new_degree = max(self.degree(), b.degree())
+        new_poly = [0] * (new_degree + 1)
+        for i in range(new_degree + 1):
+            if i > self.degree():
+                new_poly[i] = b.body[i]
+            elif i > b.degree():
+                new_poly[i] = self.body[i]
+            else:
+                new_poly[i] = self.body[i] ^ b.body[i]
+
+        zero_pad_left = next((i for i in range(new_degree, -1, -1) if new_poly[i] != 0), 0)
+        new_poly = new_poly[:-zero_pad_left] if zero_pad_left > 0 else new_poly
+
+        return Polynom(new_poly)
+
+    # Переопределение оператора умножения для полиномов
+    def __mul__(self, b):
+        new_poly = [0] * (self.degree() + b.degree() + 1)
+        for i in range(self.degree(), -1, -1):
+            if not self.body[i]:
+                continue
+            for j in range(b.degree(), -1, -1):
+                new_poly[i + j] ^= self.body[i] & b.body[j]
+
+        return Polynom(new_poly)
+
+    # Переопределение оператора "больше или равно" для полиномов
+    def __ge__(self, b):
+        if self.degree() == b.degree():
+            return self.body >= b.body
+        else:
+            return self.degree() >= b.degree()
+
+    # Переопределение оператора деления для полиномов
+    def __truediv__(self, b):
+        divided_poly = Polynom(self.body)
+        while divided_poly.degree() > b.degree():
+            division_part_degree = divided_poly.degree() - b.degree()
+            division_part_poly = Polynom.by_degree(division_part_degree)
+            sub_part_poly = b * division_part_poly
+            divided_poly = divided_poly + sub_part_poly
+
+        if divided_poly.degree() == b.degree():
+            if divided_poly >= b:
+                divided_poly = divided_poly + b
+
+        return Polynom(divided_poly.body)
+
+# Функция для вывода шагов проверки
+def print_step(description, poly):
+    print(f"{description}:", poly)
+
+# Функция для проверки неприводимости полинома
+def polynom_is_irreducible(poly):
+    max_search_degree = poly.degree() // 2
+    max_search_number = 2**(max_search_degree + 1) - 1
+    for i in range(2, max_search_number + 1):
+        check_poly = Polynom.by_number(i)
+        print_step("Проверка", check_poly)
+        remainder = poly / check_poly
+        print_step("Остаток", remainder)
+        if remainder.degree() == -1:
             return False
+    return True
 
-        order += 1
-        if order == max_order:
-            return True
+# Функция для проверки примитивности полинома в GF(2^n)
+def polynom_is_primitive_in_gp(poly, gp_degree):
+    if polynom_is_irreducible(poly):
+        max_degree = 2**gp_degree - 1
+        print("\nПроверка примитивности:")
+        for i in range(1, max_degree + 1):
+            poly_number = 2**i
+            check_poly = Polynom.by_number(poly_number + 1)
+            print_step("Проверка", check_poly)
+            remainder = check_poly / poly
+            print_step("Остаток", remainder)
+            if remainder.degree() == -1:
+                return False
+        return True
+    return False
 
-        if x_power[order] != 1:
-            return False
+if __name__ == "__main__":
+    #примитивность неприводимого многочлена 1011011
+    #1+x+x^3+x^4+x^6
+    # print("Проверка полинома: x^5 + x^2 + 1 ")
+    poly_true = Polynom.by_number(64 + 16 + 8+ 2+ 1)
 
-def multiply_polynomials(poly1, poly2):
-    result = [0] * (len(poly1) + len(poly2) - 1)
-    for i in range(len(poly1)):
-        for j in range(len(poly2)):
-            result[i + j] ^= poly1[i] & poly2[j]
-    return result
-
-# Многочлен 1100001
-polynomial = [1, 1, 0, 0, 0, 0, 1]
-
-if is_primitive_poly(polynomial):
-    print("Многочлен примитивен в поле GF(2)")
-else:
-    print("Многочлен не примитивен в поле GF(2)")
+    print_step("Примитивность", polynom_is_primitive_in_gp(poly_true, 5))
