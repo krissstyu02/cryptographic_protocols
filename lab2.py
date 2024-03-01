@@ -1,6 +1,5 @@
 from lab1 import euler_phi_standard_formula_opt
 
-
 class ModularExponentiation:
     def __init__(self, base, exponent, modulus):
         # Инициализация объекта с основанием, степенью и модулем
@@ -63,9 +62,9 @@ class ModularExponentiation:
 
 
 # Пример использования класса
-base = 3
+base = 2
 exponent = 5
-modulus = 11
+modulus = 3
 
 mod_exp = ModularExponentiation(base, exponent, modulus)
 result = mod_exp.calculate_power()
