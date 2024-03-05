@@ -41,7 +41,7 @@ class Polynom:
 
     #сложение полиномов
     def add(self, b):
-        #степень итогового полинома=макс мтепеней
+        #степень итогового полинома=макс степеней
         new_degree = max(self.degree(), b.degree())
         new_poly = [0] * (new_degree + 1)
         for i in range(new_degree + 1):
