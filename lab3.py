@@ -163,16 +163,17 @@ def polynom_is_primitive_in_gp(poly, gp_degree):
 
 if __name__ == "__main__":
     #неприводимый=True(из таблицы или не делится)
-    #приводимый(делится на тот что из таблицы)
-    poly_true = Polynom.by_number(8+2+1)
-    print("Проверка полинома на неприводимость: ", poly_true.print())
-    print(polynom_is_irreducible(poly_true))
-    print()
+    #приводимый(делится на тот что из таблицы)  1100001
 
-    poly_false = Polynom.by_number(8+2)
-    print("Проверка полинома на неприводимость: ", poly_false.print())
-    print(polynom_is_irreducible(poly_false))
-    print()
+    poly_true = Polynom.by_number(64+32+1)
+    # print("Проверка полинома на неприводимость: ", poly_true.print())
+    # print(polynom_is_irreducible(poly_true))
+    # print()
+
+    # poly_false = Polynom.by_number(8+2)
+    # print("Проверка полинома на неприводимость: ", poly_false.print())
+    # print(polynom_is_irreducible(poly_false))
+    # print()
 
     print("Проверка полинома на примитивность в GF(2): ", poly_true.print())
     print(polynom_is_primitive_in_gp(poly_true, 2))
